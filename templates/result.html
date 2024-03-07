@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Prediction Result</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row m-2">
+            <div class="col-sm-4 mt-2 mb-2" style="float: right;">
+                <button class="btn btn-primary" id="btnOpenModal">Create Now!</button>
+            </div>
+             <div class="col-sm-12">
+
+                                <div class="card" style="min-height:100vh;">
+                                <div class="table-responsive p-1"  id="printArea">
+                                    <h1 class="text-center fs-4 fw-bold" style="color: #A75DB4;">CodeCrafters - Personalized Gym Recommendation System</h1>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="fw-bold">Your BMI: </td>
+                                                <td> {{ bmi_prediction[0]|round(2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Your Standard Weight: </td>
+                                                <td> {{ bmi_prediction[1]|round(2)  }} (kg) -  {{ bmi_prediction[2]|round(2) }} (kg)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Your Level:</td>
+                                                <td>{{ fitness_recommendation[0] }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Fat Percentage:</td>
+                                                <td> {{ bmi_prediction[3]|round(2) }} %</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Your Fitness Gaol:</td>
+                                                <td>{{ fitness_recommendation[1] }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Your Fitness Type:</td>
+                                                <td>{{ fitness_recommendation[2] }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Exercises: </td>
+                                                <td>{{ fitness_recommendation[3] }}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fw-bold">Equipment needed:</td>
+                                                <td>{{ fitness_recommendation[4] }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Diet:</td>
+                                                <td>{{ fitness_recommendation[5] }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Conclusion and Recommendation: </td>
+                                                <td>{{ fitness_recommendation[6] }}</td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                </div>
+                 <div class="mt-2 mb-2">
+                     <button class="btn btn-success" id="printStatement"><i class="fas fa-print text-light"></i> Print</button>
+                     <button class="btn btn-info" id="exportStatement"><i class="fas fa-file-excel text-light"></i> Export </button>
+                 </div>
+                            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="formModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="userForm">
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="alert alert-success fw-bold d-none" role="alert">Successfully Alert</div>
+                                    <div class="alert alert-danger fw-bold d-none" role="alert">Sorry Alert</div>
+                                </div>
+                                <div class="col-sm-12 col-lg-12-cl-md-12">
+                                    <div class="form-group">
+                                        <label for="" class="label-form fw-bold">Age*</label>
+                                        <input type="number" name="Age" class="form-control" step="any" id="age" placeholder="Enter age">
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-12 col-lg-12-cl-md-12">
+                                    <div class="form-group">
+                                        <label for="" class="label-form fw-bold">Height (m) *</label>
+                                        <input type="number" name="Height" class="form-control" step="any" id="height" placeholder="Enter height (1.69)">
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-12 col-lg-12-cl-md-12">
+                                    <div class="form-group">
+                                        <label for="" class="label-form fw-bold">Weight (kg) *</label>
+                                        <input type="number" name="Weight"  class="form-control" step="any" id="Weight" placeholder="Enter Weight (kg)">
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <label for="label-form fw-bold">Sex *</label>
+                                        <select name="sex" id="type" class="form-control" >
+                                            <option value="1">Male</option>
+                                            <option value="0">Female</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                  <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <label for="label-form fw-bold">Do you have hypertension?</label>
+                                        <select name="hypertension" id="hypertension" class="form-control" >
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                  <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <label for="label-form fw-bold">Do you have Diabetes?</label>
+                                        <select name="diabetes" id="diabates" class="form-control" >
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+      </div>
+    </div>
+  </div>
+</div>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src= {{ url_for("static",filename="js/report.js") }} ></script>
+</body>
+</html>
