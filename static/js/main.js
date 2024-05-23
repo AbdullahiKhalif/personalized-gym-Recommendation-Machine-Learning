@@ -4,18 +4,32 @@
 //    navigationBar.classList.toggle("active");
 //});
 
+
+
 $('#form').submit(function(event) {
     event.preventDefault();
     // Get form data
     var age = $("#age").val();
     var height = $("#height").val();
     var weight = $("#weight").val();
+    var sex = $("#sex").val();
+    var hypertension = $("#hypertension").val();
+    var diabetes = $("#diabetes").val();
+    var gender = "";
+    var hasHypertension = "";
+    var hasDiabetes = "";
 
     // Perform form validation
     if (age === "") {
         showErrorToast("Age is required please!");
         return;
-    } else if (age < 14 || age > 63) {
+    }
+    else if (!Number.isInteger(age) && age <= 0) {
+        showErrorToast("Invalid Age please enter valid age ");
+        return;
+    }
+
+    else if (age < 14 || age > 63) {
         showErrorToast("Age must be between 14 and 63");
         return;
     } else if (height === "") {
@@ -30,6 +44,24 @@ $('#form').submit(function(event) {
     } else if (weight < 30) {
         showErrorToast("Sorry, you cannot use this system because your weight is less than 30 kg");
         return;
+    }
+    if(sex == 0){
+        gender = "Female";
+    }
+    if(sex == 1){
+        gender = "Male";
+    }
+    if(hypertension == 0){
+        hasHypertension = "Negative";
+    }
+    if(hypertension == 1){
+        hasHypertension = "Positive";
+    }
+    if(hasDiabetes == 0){
+        hasDiabetes = "Negative";
+    }
+    if(diabetes == 1){
+        hasDiabetes = "Positive";
     }
 
     // If all validations pass, submit the form via AJAX
@@ -64,6 +96,34 @@ $('#form').submit(function(event) {
                                                 <td class="fw-bold">Your Email:</td>
                                                 <td>${response.email}</td>
                                             </tr>
+
+                                            <tr>
+                                                <td class="fw-bold">Your Age:</td>
+                                                <td>${age}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Your Height:</td>
+                                                <td>${height}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Your Weight:</td>
+                                                <td>${weight}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Your Sex:</td>
+                                                <td>${gender}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold"> Hypertension?:</td>
+                                                <td>${hasHypertension}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fw-bold">Diabetes?:</td>
+                                                <td>${hasDiabetes}</td>
+                                            </tr>
+
+
                                             <tr>
                                                 <td class="fw-bold">Your BMI: </td>
                                                 <td id="bmi"> ${response.bmi_prediction[0].toFixed(2)}</td>
