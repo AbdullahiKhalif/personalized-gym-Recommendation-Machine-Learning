@@ -6,153 +6,219 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href= {{ url_for("static",filename="/css/style.css") }}
-
-    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='/css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
     <title>Personalized Gym Recommendation</title>
+    <style>
+        details {
+            margin-bottom: 1.2em;
+            font-size: 20px;
+        }
+        summary {
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        details[open] summary ~ * {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
 </head>
 
 <body>
-   <header class="bg-light shadow-md py-3">
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-dark">
-            <div>
-                <a href="#" class="navbar-brand text-primary fw-bold"><i class="fa fa-code"></i> JustDevs<span class="dot">.</span></a>
-            </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon p-3 bg-secondary rounded text-light"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="#home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="#Calculator">Recommendation</a>
-                    </li>
-                    {% if 'username' in session %}
+    <header class="bg-light shadow-md py-3">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div>
+                    <a href="#" class="navbar-brand text-primary fw-bold"><i class="fa fa-code"></i> JustDevs<span class="dot">.</span></a>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon p-3 bg-secondary rounded text-light"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-success fw-bold" href="#">Welcome, {{ session['username'][0:10] }}!</a>
+                            <a class="nav-link text-dark" href="#home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-primary fw-bold" href="{{ url_for('logout') }}"><i class="fa fa-power-off"></i> Logout</a>
+                            <a class="nav-link text-dark" href="#about">About</a>
                         </li>
-                    {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                            <a class="nav-link text-dark" href="#Calculator">Recommendation</a>
                         </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
-    </div>
-</header>
 
+                          <li class="nav-item">
+                            <a class="nav-link text-dark" href="#FAQ">FAQ</a>
+                        </li>
+                        {% if 'username' in session %}
+                            <li class="nav-item">
+                                <a class="nav-link text-success fw-bold" href="#">Welcome, {{ session['username'][0:10] }}!</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-primary fw-bold" href="{{ url_for('logout') }}"><i class="fa fa-power-off"></i> Logout</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
 
     <section id="home">
         <div class="container">
             <div id="home-content">
-
-                    <div class="left">
-                        <h1>Take Control of Your Health</h1>
-                        <p>With Our Tailored Personalized Fitness/Gym Recommendation With Exercises and Diet Plans</p>
-
-                    </div>
-                    <div class="right">
-                        <img src="{{ url_for('static', filename='images/img1.svg') }}" alt="">
-                    </div>
+                <div class="left">
+                    <h1 class="fw-bold">Take Control of Your Health</h1>
+                    <p>With Our Tailored Personalized Fitness/Gym Recommendation With Exercises and Diet Plans</p>
                 </div>
-            </div>
-    </div>
-    </section>
-    <section id="Calculator">
-        <div class="container-fluid" style="background-color: #fcfcfc;">
-            <div class="container">
-                <h2 class="fw-bold p-3 display-5 text-center" style="color: #A75DB4">Calculator</h2>
-                <div class="row">
-                    <div class="col-12">
-							<div class="card p-2 mb-3">
-								<div class="card-header" style="background-color: #fcfcfc;">
-                                    <form id="form">
-                                        <div class="row">
-                                            <div class="col-sm-4 mt-2">
-                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
-                                    <legend class="float-none w-auto px-3 text-dark fw-bold fs-6"> Age</legend>
-                                    <input type="number" name="Age" id="age" placeholder="Enter age">
-                                                 </fieldset>
-                                    </div>
-                                            <div class="col-sm-4 mt-2">
-                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
-                                    <legend class="float-none w-auto px-3 text-dark fw-bold fs-6"> Height(m)</legend>
-                                    <input type="number" name="Height" step="any" id="height" placeholder="Enter height (1.69)">
-                                                 </fieldset>
-                                    </div>
-                                            <div class="col-sm-4 mt-2">
-                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
-                                    <legend class="float-none w-auto px-3 text-dark fw-bold fs-6"> Weight(kg)</legend>
-                                    <input type="number" name="Weight" step="any" id="weight" placeholder="Enter weight (kg)">
-                                                 </fieldset>
-                                    </div>
-
-                                            <div class="col-sm-4 mt-4">
-                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
-                                    <legend class="float-none w-auto px-3 text-dark fw-bold fs-6"> Sex</legend>
-                                   <select name="sex" id="sex">
-                                       <option value="1">Male</option>
-                                       <option value="0">Female</option>
-                                   </select>
-                                                 </fieldset>
-                                    </div>
-
-                                            <div class="col-sm-4 mt-4">
-                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
-                                    <legend class="float-none w-auto px-3 text-dark fw-bold fs-6"> Do you have hypertension?</legend>
-                                   <select name="hypertension" id="hypertension">
-                                       <option value="0">No</option>
-                                       <option value="1">Yes</option>
-                                   </select>
-                                                 </fieldset>
-                                    </div>
-                                            <div class="col-sm-4 mt-4">
-                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
-                                    <legend class="float-none w-auto px-3 text-dark fw-bold fs-6"> Do you have diabetes?</legend>
-                                   <select name="diabetes" id="diabetes">
-                                       <option value="0">No</option>
-                                       <option value="1">Yes</option>
-                                   </select>
-                                                 </fieldset>
-                                    </div>
-
-
-
-                                            <div class="mt-2 mb-2">
-                                                <button class="btn text-light" type="submit" id="btnRecommend" style="background-color: #A75DB4">Recommendation</button>
-                                            </div>
-                                            </div>
-                                        </form>
-
-
-								</div>
-
-							</div>
-						</div>
+                <div class="right">
+                    <img src="{{ url_for('static', filename='images/img1.svg') }}" alt="">
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="result" class="mt-4 text-2xl font-bold">
-<!--        <div id="result" class="mt-4 text-2xl font-bold"></div>-->
+    <section id="about" class="py-5" style="background-color: #FDF8FD;">
+        <div class="container">
+            <h2 class="fw-bold p-3 display-6 text-center" style="color: #A75DB4">About Us</h2>
+            <ul class="fs-5 text-muted">
+                <li class="mb-4">
+                    Our system, Personalized Gym Recommendation System (PGRS), is a digital platform designed to help people who are new to the gym. By collecting information such as age, height, weight, and any medical conditions like high blood pressure or diabetes, PGRS creates fitness and dietary plans that fit each user's needs. This way, everyone can get advice that matches their personal health and goals.
+                </li>
+                <li class="mb-4">
+                    We trained four different models to ensure the best recommendations, and we chose the Decision Tree model for both regression and classification tasks. This model helps us analyze user data effectively, providing accurate and personalized fitness plans. With PGRS, newcomers to the gym can feel confident and supported as they start their fitness journey.
+                </li>
+                <li class="mb-4">
+                    Our team consists of four dedicated members who are passionate about health and fitness. Each of us brings a unique set of skills to the table, including expertise in data analysis, machine learning, and other skills. Together, we work hard to make sure PGRS provides the best possible recommendations for our users. Our combined efforts ensure that everyone can achieve their fitness goals in a safe and effective manner.
+                </li>
+            </ul>
+        </div>
     </section>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <section id="Calculator">
+        <div class="container-fluid" style="background-color: #fcfcfc;">
+            <div class="container">
+                <h2 class="fw-bold p-3 display-6 text-center" style="color: #A75DB4">Calculator</h2>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card p-2 mb-3">
+                            <div class="card-header" style="background-color: #fcfcfc;">
+                                <form id="form">
+                                    <div class="row">
+                                        <div class="col-sm-4 mt-2">
+                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
+                                                <legend class="float-none w-auto px-3 text-dark fw-bold fs-6">Age</legend>
+                                                <input type="number" name="Age" id="age" placeholder="Enter age">
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-sm-4 mt-2">
+                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
+                                                <legend class="float-none w-auto px-3 text-dark fw-bold fs-6">Height(m)</legend>
+                                                <input type="number" name="Height" step="any" id="height" placeholder="Enter height (1.69)">
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-sm-4 mt-2">
+                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
+                                                <legend class="float-none w-auto px-3 text-dark fw-bold fs-6">Weight(kg)</legend>
+                                                <input type="number" name="Weight" step="any" id="weight" placeholder="Enter weight (kg)">
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-sm-4 mt-4">
+                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
+                                                <legend class="float-none w-auto px-3 text-dark fw-bold fs-6">Sex</legend>
+                                                <select name="sex" id="sex">
+                                                    <option value="1">Male</option>
+                                                    <option value="0">Female</option>
+                                                </select>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-sm-4 mt-4">
+                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
+                                                <legend class="float-none w-auto px-3 text-dark fw-bold fs-6">Do you have hypertension?</legend>
+                                                <select name="hypertension" id="hypertension">
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-sm-4 mt-4">
+                                            <fieldset class="border border-1 border-dark rounded-1 px-3 py-2">
+                                                <legend class="float-none w-auto px-3 text-dark fw-bold fs-6">Do you have diabetes?</legend>
+                                                <select name="diabetes" id="diabetes">
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                            </fieldset>
+                                        </div>
+                                        <div class="mt-2 mb-2">
+                                            <button class="btn text-light" type="submit" id="btnRecommend" style="background-color: #A75DB4">Recommendation</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+     <section id="result" class="mt-4 text-2xl font-bold">
+    </section>
+
+    <section id="FAQ" class="py-5">
+        <div class="container">
+            <h2 class="fw-bold p-3 display-6 text-center" style="color: #A75DB4">Frequently Asked Questions</h2>
+            <div id="faqAccordion">
+                <details>
+                    <summary>What is Personalized Gym Recommendation System (PGRS)?</summary>
+                    <p>PGRS is a digital platform designed to provide personalized fitness and dietary plans based on individual user data such as age, height, weight, and medical conditions.</p>
+                </details>
+                <details>
+                    <summary>How does PGRS collect user data?</summary>
+                    <p>PGRS collects user data through a form where users input their age, height, weight, sex, and any medical conditions such as hypertension or diabetes.</p>
+                </details>
+                <details>
+                    <summary>How does PGRS use the collected data?</summary>
+                    <p>PGRS uses the collected data to create tailored fitness and dietary plans. The Decision Tree model is used for analyzing the data to provide accurate and personalized recommendations.</p>
+                </details>
+                <details>
+                    <summary>Who can benefit from PGRS?</summary>
+                    <p>PGRS is designed for people who are new to the gym and need personalized advice on fitness and diet plans based on their health data and goals.</p>
+                </details>
+                <details>
+                    <summary>Is my data secure with PGRS?</summary>
+                    <p>Yes, PGRS takes user privacy seriously and implements robust security measures to ensure that all collected data is kept secure and confidential.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src= {{ url_for("static",filename="js/main.js") }} ></script>
-
-
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const details = document.querySelectorAll("details");
+            details.forEach(detail => {
+                detail.addEventListener("click", () => {
+                    details.forEach(d => {
+                        if (d !== detail) {
+                            d.removeAttribute("open");
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>

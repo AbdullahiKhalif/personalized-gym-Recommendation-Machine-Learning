@@ -73,7 +73,7 @@ $('#form').submit(function(event) {
             // Display the recommendation
             var html = `
              <div class="container-fluid p-4" style="background-color: #A75DB4; min-height: 80vh;">
-                <h2 class="fw-bold p-2 display-5 text-center text-light">Report</h2>
+                <h2 class="fw-bold p-2 display-6 text-center text-light">Report</h2>
              <div class="container p-2" style="background-color: #fff;">
 
         <div class="row">
