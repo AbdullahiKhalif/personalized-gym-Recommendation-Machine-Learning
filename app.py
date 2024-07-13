@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Load your models
 decision_tree_regression_model = load('models/decision_tree_regressor.joblib')
 decision_tree_classification_model = load('models/decision_tree_classifier.joblib')
-
+# server configuration
 app = Flask(__name__)
 app.secret_key = "xtay6UY&"
 
@@ -68,7 +68,7 @@ def signup():
         if user:
             cursor.close()
             conn.close()
-            return render_template('signup.html', error='Sorry!. his email already exists')
+            return render_template('signup.html', error='Sorry!. this email already exists')
 
         # Insert user into database
         cursor.execute("INSERT INTO users (fullName, address, email, password) VALUES (%s, %s, %s, %s)", (name, address,email, password))

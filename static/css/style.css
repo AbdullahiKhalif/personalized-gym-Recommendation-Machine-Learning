@@ -279,3 +279,8 @@ select.gender{
         font-size: 16px;
     }
 }
+@media print {
+    .chart-container {
+        display: none;
+    }
+}

@@ -1,11 +1,3 @@
-//let burger = document.querySelector(".fa-bars");
-//let navigationBar = document.querySelector(".navigation-bar");
-//burger.addEventListener("click", () => {
-//    navigationBar.classList.toggle("active");
-//});
-
-
-
 $('#form').submit(function(event) {
     event.preventDefault();
     // Get form data
@@ -24,7 +16,7 @@ $('#form').submit(function(event) {
         showErrorToast("Age is required please!");
         return;
     }
-    else if (!Number.isInteger(age) && age <= 0) {
+    else if (!Number.isInteger(parseInt(age)) && age <= 0) {
         showErrorToast("Invalid Age please enter valid age ");
         return;
     }
@@ -57,7 +49,7 @@ $('#form').submit(function(event) {
     if(hypertension == 1){
         hasHypertension = "Positive";
     }
-    if(hasDiabetes == 0){
+    if(diabetes == 0){
         hasDiabetes = "Negative";
     }
     if(diabetes == 1){
@@ -141,7 +133,7 @@ $('#form').submit(function(event) {
                                                 <td> ${response.bmi_prediction[3].toFixed(2) } </td>
                                             </tr>
                                             <tr>
-                                                <td class="fw-bold">Your Fitness Gaol:</td>
+                                                <td class="fw-bold">Your Fitness Goal:</td>
                                                 <td> ${response.fitness_recommendation[1]}</td>
                                             </tr>
                                             <tr>
@@ -171,6 +163,24 @@ $('#form').submit(function(event) {
                                     </table>
                                 </div>
 
+                                <div class="row">
+                                        <div class="col-sm-12 col-md-6 col-lg-6">
+                                            <div class="chart-container p-2" style="width: 100%; max-width: 600px; height: 40vh; margin: 0 auto;">
+                                                <canvas id="weightChart"></canvas>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-12 col-md-6 col-lg-6 p-2">
+                                            <div class="chart-container" style="width: 100%; max-width: 600px; height: 40vh; margin: 0 auto;">
+                                                <canvas id="fatPercentageChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
                                 </div>
                  <div class="mt-2 mb-2">
                      <button class="btn btn-success text-light" id="printStatement"><i class="fas fa-print text-light"></i> Print</button>
@@ -182,6 +192,9 @@ $('#form').submit(function(event) {
     </div>
             `;
            $('#result').html(html);
+
+           // Create charts
+           createCharts(weight, response.bmi_prediction);
         },
         error: function(xhr, status, error) {
             // Handle error response
@@ -189,6 +202,77 @@ $('#form').submit(function(event) {
         }
     });
 });
+
+function createCharts(weight, bmiPrediction) {
+    // Bar chart for Weight and Standard Weight
+    var ctxBar = document.getElementById('weightChart').getContext('2d');
+
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: ['Weight', 'Standard Weight Min', 'Standard Weight Max'],
+            datasets: [{
+                label: 'Weight (kg)',
+                data: [weight, bmiPrediction[1], bmiPrediction[2]],
+                backgroundColor: ['#A75DB4', '#FF6F61', '#6B8E23']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true
+                },
+                tooltip: {
+                    enabled: true
+                },
+                datalabels: {
+                    display: true,
+                    color: '#fff'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // Pie chart for Fat Percentage
+    var ctxPie = document.getElementById('fatPercentageChart').getContext('2d');
+
+    new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: ['Fat Percentage', 'Rest of the Body'],
+            datasets: [{
+                label: 'Fat Percentage',
+                data: [bmiPrediction[3], 100 - bmiPrediction[3]],
+                backgroundColor: ['#FF0000', '#0000FF']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true
+                },
+                tooltip: {
+                    enabled: true
+                },
+                datalabels: {
+                    display: true,
+                    color: '#fff'
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+}
 
 function showErrorToast(message) {
     const Toast = Swal.mixin({
@@ -222,7 +306,6 @@ $(document).on("click", "#exportStatement", function(event) {
     event.preventDefault();
 });
 
-
 function printStatement(){
     let printArea = document.querySelector("#printArea");
 
@@ -235,7 +318,6 @@ function printStatement(){
     }
     table{
         width: 100%;
-
     }
     h1{
         font-size: 22 !important;
@@ -252,11 +334,15 @@ function printStatement(){
         text-align: left !important;
         border-bottom: 1px solid #ddd !important;
     }
+    @media print {
+        .chart-container {
+            display: none;
+        }
+    }
     </style>`)
     newWindow.document.write(`</head><body>`)
     newWindow.document.write(printArea.innerHTML);
     newWindow.document.write(`</body></html>`);
     newWindow.print();
-   newWindow.close();
-
+    newWindow.close();
 }
