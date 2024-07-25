@@ -213,7 +213,7 @@ function createCharts(weight, bmiPrediction) {
             labels: ['Weight', 'Standard Weight Min', 'Standard Weight Max'],
             datasets: [{
                 label: 'Weight (kg)',
-                data: [weight, bmiPrediction[1], bmiPrediction[2]],
+                data: [weight, bmiPrediction[1].toFixed(2), bmiPrediction[2].toFixed(2)],
                 backgroundColor: ['#A75DB4', '#FF6F61', '#6B8E23']
             }]
         },
@@ -250,7 +250,7 @@ function createCharts(weight, bmiPrediction) {
             labels: ['Fat Percentage', 'Rest of the Body'],
             datasets: [{
                 label: 'Fat Percentage',
-                data: [bmiPrediction[3], 100 - bmiPrediction[3]],
+                data: [bmiPrediction[3], 100 - bmiPrediction[3].toFixed(2)],
                 backgroundColor: ['#FF0000', '#0000FF']
             }]
         },
@@ -293,8 +293,21 @@ function showErrorToast(message) {
 }
 
 $(document).on("click", "#printStatement", function(){
-    printStatement();
+    Swal.fire({
+        title: 'Are you sure you want to print the report?',
+        text: "Make sure the information is correct before printing.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, print it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            printStatement();
+        }
+    });
 });
+
 
 $(document).on("click", "#exportStatement", function(event) {
     var file = new Blob([$("#printArea").html()], {type: "text/html"});
@@ -306,43 +319,88 @@ $(document).on("click", "#exportStatement", function(event) {
     event.preventDefault();
 });
 
-function printStatement(){
-    let printArea = document.querySelector("#printArea");
+function printStatement() {
+    // Convert each chart to an image
+    const weightChart = document.getElementById('weightChart');
+    const fatPercentageChart = document.getElementById('fatPercentageChart');
 
-    var newWindow = window.open("");
-    newWindow.document.write(`<html><head><title>Report Recommendation Information</title>`);
-    newWindow.document.write(`<style media="print">
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
-    body{
-        font-family: 'Poppins', sans-serif;
-    }
-    table{
-        width: 100%;
-    }
-    h1{
-        font-size: 22 !important;
-        padding: 15px !important;
-    }
-    td.fw-bold{
-//        background-color: #A75DB4 !important;
-        color: #000 !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
-    }
-    th , td{
-        padding: 15px !important;
-        text-align: left !important;
-        border-bottom: 1px solid #ddd !important;
-    }
-    @media print {
-        .chart-container {
-            display: none;
-        }
-    }
-    </style>`)
-    newWindow.document.write(`</head><body>`)
-    newWindow.document.write(printArea.innerHTML);
-    newWindow.document.write(`</body></html>`);
-    newWindow.print();
-    newWindow.close();
+    const weightChartImage = weightChart.toDataURL('image/png');
+    const fatPercentageChartImage = fatPercentageChart.toDataURL('image/png');
+
+    // Create a hidden iframe
+    let iframe = document.createElement('iframe');
+    iframe.style.position = 'absolute';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = 'none';
+    document.body.appendChild(iframe);
+
+    // Write the HTML content to the iframe
+    let doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(`
+        <html>
+        <head>
+            <title>Report Recommendation Information</title>
+            <style media="print">
+                @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+                body{
+                    font-family: 'Poppins', sans-serif;
+                }
+                table{
+                    width: 100%;
+                }
+                h1{
+                    font-size: 22px !important;
+                    padding: 15px !important;
+                }
+                td.fw-bold{
+                    color: #000 !important;
+                    font-size: 16px !important;
+                    font-weight: bold !important;
+                }
+                th, td{
+                    padding: 15px !important;
+                    text-align: left !important;
+                    border-bottom: 1px solid #ddd !important;
+                }
+                .chart-container {
+                    display: inline-block;
+                    width: 45%;
+                    text-align: center;
+                }
+                .chart-container img {
+                    width: 100%;
+                    height: auto;
+                }
+                @media print {
+                    .no-print {
+                        display: none;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            ${document.querySelector("#printArea").innerHTML}
+            <div class="chart-container">
+                <h4>Weight Chart</h3>
+                <img src="${weightChartImage}" alt="Weight Chart">
+            </div>
+            <div class="chart-container">
+                <h4>BodyFat Percentage Chart</h3>
+                <img src="${fatPercentageChartImage}" alt="Fat Percentage Chart">
+            </div>
+        </body>
+        </html>
+    `);
+    doc.close();
+
+    // Focus on the iframe and print the content
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+
+    // Remove the iframe after printing
+    setTimeout(() => {
+        document.body.removeChild(iframe);
+    }, 1000);
 }

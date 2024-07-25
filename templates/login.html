@@ -16,11 +16,8 @@
         <div class="w-full md:w-1/2 p-8">
 
             <h2 class="text-3xl font-bold mb-4">Login!</h2>
-             {% if error %}
-                <p class="error p-2 bg-red-200 rounded-sm">{{ error }}!</p>
-            {% endif %}
             <p class="text-gray-600 mb-8">Clarity gives you a health and fitness that you need to know a truly professional website.</p>
-            <form method="post" action="{{ url_for('login') }}">
+            <form id="form">
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold">Email Address</label>
                     <input type="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="i.e. example@gmail.com">
@@ -36,5 +33,11 @@
                         </a></p>
         </div>
     </div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src= {{ url_for("static",filename="js/login.js") }} ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </body>
 </html>

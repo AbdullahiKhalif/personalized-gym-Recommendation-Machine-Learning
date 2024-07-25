@@ -44,7 +44,7 @@ def login():
             session['address'] = user['address']
             return redirect(url_for('index'))
         else:
-            return render_template('login.html', error='Sorry Invalid email or password')
+            return jsonify(error='Sorry! Invalid email or password')
 
     return render_template('login.html')
 
@@ -58,7 +58,7 @@ def signup():
 
         # Check if the name is valid
         if not is_valid_name(name):
-            return render_template('signup.html', error='Invalid name. Please enter a valid name.')
+            return jsonify(error='Invalid name!. Please enter a valid name.')
 
         # Check if email already exists
         conn = mysql.connector.connect(**mysql_config)
@@ -68,7 +68,7 @@ def signup():
         if user:
             cursor.close()
             conn.close()
-            return render_template('signup.html', error='Sorry!. this email already exists')
+            return jsonify(error='Sorry!. this email already exists')
 
         # Insert user into database
         cursor.execute("INSERT INTO users (fullName, address, email, password) VALUES (%s, %s, %s, %s)", (name, address,email, password))
